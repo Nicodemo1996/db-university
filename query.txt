@@ -1,0 +1,42 @@
+
+
+SELECT * FROM students WHERE YEAR(date_of_birth) = 1990;
+
+SELECT * FROM courses WHERE cfu > 10;
+
+SELECT * FROM students WHERE TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) > 30;
+
+SELECT * FROM courses WHERE year = 1 AND period LIKE 'I semestre';
+
+SELECT * FROM exams WHERE date = '2020-06-20' AND hour > '14:00:00';
+
+SELECT * FROM degrees WHERE level = 'magistrale';
+
+SELECT COUNT* AS numero_dipartimenti FROM departments;
+
+SELECT COUNT* AS insegnanti_senza_telefono FROM teachers WHERE phone IS NULL OR TRIM(phone) = '';
+
+-- Query con GROUP BY
+
+SELECT YEAR(enrolment_date) AS anno_iscrizione, COUNT* AS numero_iscritti
+FROM students
+GROUP BY YEAR(enrolment_date)
+ORDER BY anno_iscrizione;
+
+SELECT office_address, COUNT(*) AS num_insegnanti
+FROM teachers
+GROUP BY office_address
+HAVING COUNT* > 1
+ORDER BY num_insegnanti DESC;
+
+SELECT e.id AS exam_id, e.date, e.hour, AVG(es.vote) AS media_voti, COUNT(es.student_id) AS num_studenti
+FROM exam_student es
+JOIN exams e ON e.id = es.exam_id
+GROUP BY es.exam_id, e.date, e.hour
+ORDER BY e.date, e.hour;
+
+SELECT d.department_id, dep.name AS department_name, COUNT(*) AS num_degrees
+FROM degrees d
+JOIN departments dep ON dep.id = d.department_id
+GROUP BY d.department_id, dep.name
+ORDER BY num_degrees DESC;
